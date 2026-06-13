@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "generated_at": "2026-06-14T07:31:54.071534",
+    "v1_project": "Version 1.0",
+    "v2_project": "Version 2.0",
+    "v1_generated_at": "2026-06-14T07:31:53.999592",
+    "v2_generated_at": "2026-06-14T07:31:54.047441",
+    "comparison_scope": "public",
+    "scope_description": "Public API only (excludes private, protected, package-private, and internal members)"
+  },
+  "classes": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "functions": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "public_api_changes": [],
+  "summary": {
+    "total_changes": 0,
+    "classes_added": 0,
+    "classes_removed": 0,
+    "classes_modified": 0,
+    "functions_added": 0,
+    "functions_removed": 0,
+    "functions_modified": 0
+  }
+}

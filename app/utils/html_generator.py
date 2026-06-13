@@ -145,6 +145,7 @@ class HTMLGenerator:
                 'type': 'module',
                 'name': module['name'],
                 'full_name': module['full_name'],
+                'module_path': module['full_name'],
                 'description': module['description'],
                 'url': f"modules/{module['full_name'].replace('/', '_').replace('\\', '_')}.html"
             })
@@ -154,6 +155,7 @@ class HTMLGenerator:
                 'type': 'class',
                 'name': cls['name'],
                 'full_name': f"{cls['module']}::{cls['name']}",
+                'module_path': cls['module'],
                 'description': cls['description'],
                 'url': f"classes/{cls['module'].replace('/', '_').replace('\\', '_')}_{cls['name']}.html"
             })
@@ -163,6 +165,7 @@ class HTMLGenerator:
                     'type': 'method',
                     'name': f"{cls['name']}.{method['name']}",
                     'full_name': f"{cls['module']}::{cls['name']}.{method['name']}",
+                    'module_path': cls['module'],
                     'description': method['description'],
                     'url': f"classes/{cls['module'].replace('/', '_').replace('\\', '_')}_{cls['name']}.html#method-{method['name']}"
                 })
@@ -172,6 +175,7 @@ class HTMLGenerator:
                 'type': 'function',
                 'name': func['name'],
                 'full_name': f"{func['module']}::{func['name']}",
+                'module_path': func['module'],
                 'description': func['description'],
                 'url': f"functions/{func['module'].replace('/', '_').replace('\\', '_')}_{func['name']}.html"
             })

@@ -1,34 +1,63 @@
 import json
 from datetime import datetime
 
-PUBLIC_ACCESS = {'public', 'package-private', None}
 
-def _is_public_method(method):
-    access = method.get('access_modifier')
-    if access in PUBLIC_ACCESS:
+def _is_public_method(method, scope='public'):
+    if scope == 'full':
         return True
+    access = method.get('access_modifier')
     name = method.get('name', '')
-    if name.startswith('_') and not name.startswith('__') and not name.endswith('__'):
+    if access in ('private', 'protected'):
         return False
     if name.startswith('__') and not name.endswith('__'):
         return False
-    return access not in ('private', 'protected')
-
-def _is_public_class(cls):
-    modifiers = cls.get('modifiers', [])
-    if 'private' in modifiers or 'protected' in modifiers:
+    if name.startswith('_') and not name.startswith('__'):
+        return False
+    if access == 'package-private':
         return False
     return True
 
-def _get_class_signatures(doc):
+
+def _is_public_class(cls, scope='public'):
+    if scope == 'full':
+        return True
+    modifiers = cls.get('modifiers', [])
+    if 'private' in modifiers or 'protected' in modifiers:
+        return False
+    access = cls.get('access_modifier')
+    if access in ('private', 'protected', 'package-private'):
+        return False
+    name = cls.get('name', '')
+    if scope == 'public' and name.startswith('_') and not name.startswith('__'):
+        return False
+    return True
+
+
+def _is_public_function(func, scope='public'):
+    if scope == 'full':
+        return True
+    access = func.get('access_modifier')
+    if access in ('private', 'protected'):
+        return False
+    name = func.get('name', '')
+    if name.startswith('__') and not name.endswith('__'):
+        return False
+    if name.startswith('_') and not name.startswith('__'):
+        return False
+    if access == 'package-private':
+        return False
+    return True
+
+
+def _get_class_signatures(doc, scope='public'):
     signatures = {}
     for cls in doc.get('classes', []):
-        if not _is_public_class(cls):
+        if not _is_public_class(cls, scope):
             continue
         key = f"{cls['module']}::{cls['name']}"
         methods = []
         for method in cls.get('methods', []):
-            if not _is_public_method(method):
+            if not _is_public_method(method, scope):
                 continue
             params = ','.join([f"{p['type'] if p.get('type') else 'any'} {p['name']}" for p in method.get('parameters', [])])
             ret_type = method.get('return_type', 'void')
@@ -42,9 +71,12 @@ def _get_class_signatures(doc):
         }
     return signatures
 
-def _get_function_signatures(doc):
+
+def _get_function_signatures(doc, scope='public'):
     signatures = {}
     for func in doc.get('functions', []):
+        if not _is_public_function(func, scope):
+            continue
         key = f"{func['module']}::{func['name']}"
         params = ','.join([f"{p['type'] if p.get('type') else 'any'} {p['name']}" for p in func.get('parameters', [])])
         ret_type = func.get('return_type', 'void')
@@ -56,11 +88,14 @@ def _get_function_signatures(doc):
         }
     return signatures
 
-def compare_versions(doc_v1, doc_v2):
-    classes_v1 = _get_class_signatures(doc_v1)
-    classes_v2 = _get_class_signatures(doc_v2)
-    functions_v1 = _get_function_signatures(doc_v1)
-    functions_v2 = _get_function_signatures(doc_v2)
+
+def compare_versions(doc_v1, doc_v2, scope='public'):
+    classes_v1 = _get_class_signatures(doc_v1, scope)
+    classes_v2 = _get_class_signatures(doc_v2, scope)
+    functions_v1 = _get_function_signatures(doc_v1, scope)
+    functions_v2 = _get_function_signatures(doc_v2, scope)
+
+    changes_key = 'public_api_changes' if scope == 'public' else 'all_changes'
 
     report = {
         'metadata': {
@@ -68,7 +103,9 @@ def compare_versions(doc_v1, doc_v2):
             'v1_project': doc_v1['metadata']['project_name'],
             'v2_project': doc_v2['metadata']['project_name'],
             'v1_generated_at': doc_v1['metadata']['generated_at'],
-            'v2_generated_at': doc_v2['metadata']['generated_at']
+            'v2_generated_at': doc_v2['metadata']['generated_at'],
+            'comparison_scope': scope,
+            'scope_description': 'Public API only (excludes private, protected, package-private, and internal members)' if scope == 'public' else 'Full comparison (includes all classes, methods, and functions)'
         },
         'classes': {
             'added': [],
@@ -80,7 +117,7 @@ def compare_versions(doc_v1, doc_v2):
             'removed': [],
             'modified': []
         },
-        'public_api_changes': []
+        changes_key: []
     }
 
     all_class_keys = set(classes_v1.keys()) | set(classes_v2.keys())
@@ -88,7 +125,7 @@ def compare_versions(doc_v1, doc_v2):
         if key in classes_v1 and key not in classes_v2:
             cls = classes_v1[key]
             report['classes']['removed'].append(cls)
-            report['public_api_changes'].append({
+            report[changes_key].append({
                 'type': 'class_removed',
                 'name': cls['name'],
                 'module': cls['module'],
@@ -97,7 +134,7 @@ def compare_versions(doc_v1, doc_v2):
         elif key not in classes_v1 and key in classes_v2:
             cls = classes_v2[key]
             report['classes']['added'].append(cls)
-            report['public_api_changes'].append({
+            report[changes_key].append({
                 'type': 'class_added',
                 'name': cls['name'],
                 'module': cls['module'],
@@ -118,7 +155,7 @@ def compare_versions(doc_v1, doc_v2):
                     'new_inheritance': cls2['inheritance']
                 })
                 for method in methods_removed:
-                    report['public_api_changes'].append({
+                    report[changes_key].append({
                         'type': 'method_removed',
                         'class': cls1['name'],
                         'module': cls1['module'],
@@ -126,7 +163,7 @@ def compare_versions(doc_v1, doc_v2):
                         'message': f"Method '{method}' has been removed from class '{cls1['name']}'"
                     })
                 for method in methods_added:
-                    report['public_api_changes'].append({
+                    report[changes_key].append({
                         'type': 'method_added',
                         'class': cls1['name'],
                         'module': cls1['module'],
@@ -139,7 +176,7 @@ def compare_versions(doc_v1, doc_v2):
         if key in functions_v1 and key not in functions_v2:
             func = functions_v1[key]
             report['functions']['removed'].append(func)
-            report['public_api_changes'].append({
+            report[changes_key].append({
                 'type': 'function_removed',
                 'name': func['name'],
                 'module': func['module'],
@@ -148,7 +185,7 @@ def compare_versions(doc_v1, doc_v2):
         elif key not in functions_v1 and key in functions_v2:
             func = functions_v2[key]
             report['functions']['added'].append(func)
-            report['public_api_changes'].append({
+            report[changes_key].append({
                 'type': 'function_added',
                 'name': func['name'],
                 'module': func['module'],
@@ -163,17 +200,17 @@ def compare_versions(doc_v1, doc_v2):
                     'old_signature': func1['signature'],
                     'new_signature': func2['signature']
                 })
-                report['public_api_changes'].append({
+                report[changes_key].append({
                     'type': 'function_modified',
                     'name': func1['name'],
                     'module': func1['module'],
                     'old_signature': func1['signature'],
                     'new_signature': func2['signature'],
-                    'message': f"Function '{func1['name']}' signature changed: {func1['signature']} → {func2['signature']}"
+                    'message': f"Function '{func1['name']}' signature changed: {func1['signature']} -> {func2['signature']}"
                 })
 
     report['summary'] = {
-        'total_changes': len(report['public_api_changes']),
+        'total_changes': len(report[changes_key]),
         'classes_added': len(report['classes']['added']),
         'classes_removed': len(report['classes']['removed']),
         'classes_modified': len(report['classes']['modified']),

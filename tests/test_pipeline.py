@@ -271,7 +271,10 @@ def test_version_comparison():
     assert result['success'] == True
     report = result['report']
     
-    print(f"\n[OK] 版本对比报告生成")
+    assert report['metadata']['comparison_scope'] == 'public', "默认口径应为public"
+    assert 'scope_description' in report['metadata'], "应包含口径描述"
+    
+    print(f"\n[OK] 版本对比报告生成 (scope: {report['metadata']['comparison_scope']})")
     print(f"  - 新增类: {len(report['classes']['added'])}")
     print(f"  - 删除类: {len(report['classes']['removed'])}")
     print(f"  - 修改类: {len(report['classes']['modified'])}")
@@ -288,6 +291,15 @@ def test_version_comparison():
     
     assert 'summary' in report_json
     assert report_json['summary']['total_changes'] >= 0
+    assert report_json['metadata']['comparison_scope'] == 'public'
+    
+    # 测试full模式
+    result_full = processor.compare_versions(zip_v1, zip_v2, 'Version 1.0', 'Version 2.0', scope='full')
+    report_full = result_full['report']
+    assert report_full['metadata']['comparison_scope'] == 'full', "full模式口径应为full"
+    public_changes = report['summary']['total_changes']
+    full_changes = report_full['summary']['total_changes']
+    print(f"[OK] full模式变更数({full_changes}) >= public模式({public_changes})")
     
     print(f"[OK] 报告文件: {result['report_html_path']}")
     
@@ -357,7 +369,8 @@ def test_html_generation():
     
     assert 'Calculator' in search_content, "搜索数据应包含Calculator"
     assert 'greet' in search_content, "搜索数据应包含greet"
-    print(f"[OK] 搜索数据包含正确的索引")
+    assert 'module_path' in search_content, "搜索数据应包含module_path字段"
+    print(f"[OK] 搜索数据包含正确的索引和模块路径")
     
     # 检查index.html内容
     index_path = os.path.join(temp_dir, 'index.html')

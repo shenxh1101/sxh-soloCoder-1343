@@ -81,7 +81,7 @@ class DocumentationProcessor:
 
         return parsed_files
 
-    def compare_versions(self, zip_path_v1, zip_path_v2, name_v1=None, name_v2=None, output_dir=None):
+    def compare_versions(self, zip_path_v1, zip_path_v2, name_v1=None, name_v2=None, output_dir=None, scope='public'):
         if output_dir is None:
             output_dir = create_temp_dir(prefix='compare_')
         os.makedirs(output_dir, exist_ok=True)
@@ -94,7 +94,7 @@ class DocumentationProcessor:
         result_v1 = self.process_zip(zip_path_v1, name_v1 or 'Version 1', output_dir=v1_dir)
         result_v2 = self.process_zip(zip_path_v2, name_v2 or 'Version 2', output_dir=v2_dir)
 
-        report = compare_versions(result_v1['doc_structure'], result_v2['doc_structure'])
+        report = compare_versions(result_v1['doc_structure'], result_v2['doc_structure'], scope=scope)
 
         report_json_path = os.path.join(output_dir, 'comparison_report.json')
         with open(report_json_path, 'w', encoding='utf-8') as f:

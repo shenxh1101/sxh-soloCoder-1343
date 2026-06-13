@@ -12,6 +12,50 @@ class TaskManager:
     def __init__(self):
         self.processor = DocumentationProcessor()
 
+    def _build_artifacts(self, task_output_dir, task_id):
+        artifacts = []
+        task_prefix = f'tasks/{task_id}'
+        base_dir = os.path.abspath(Config.TEMP_OUTPUT_FOLDER)
+        type_map = {
+            '.json': 'document',
+            '.puml': 'diagram',
+            '.html': 'report',
+            '.zip': 'archive',
+            '.css': 'stylesheet',
+            '.js': 'script'
+        }
+        for root, dirs, files in os.walk(task_output_dir):
+            for fname in files:
+                fpath = os.path.join(root, fname)
+                try:
+                    fsize = os.path.getsize(fpath)
+                except OSError:
+                    fsize = 0
+                rel = os.path.relpath(fpath, base_dir).replace('\\', '/')
+                _, ext = os.path.splitext(fname)
+                ftype = type_map.get(ext.lower(), 'file')
+                artifacts.append({
+                    'path': rel,
+                    'name': fname,
+                    'size': fsize,
+                    'type': ftype,
+                    'extension': ext.lower()
+                })
+        zip_path = os.path.join(Config.TEMP_OUTPUT_FOLDER, 'tasks', f'{task_id}.zip')
+        if os.path.exists(zip_path):
+            try:
+                zsize = os.path.getsize(zip_path)
+            except OSError:
+                zsize = 0
+            artifacts.insert(0, {
+                'path': f'tasks/{task_id}.zip',
+                'name': f'{task_id}.zip',
+                'size': zsize,
+                'type': 'archive',
+                'extension': '.zip'
+            })
+        return artifacts
+
     def create_task(self, task_type, **kwargs):
         task_id = generate_unique_id()
         task = {
@@ -82,6 +126,7 @@ class TaskManager:
         cleanup_expired_previews()
 
         task_prefix = f'tasks/{task_id}'
+        artifacts = self._build_artifacts(task_output_dir, task_id)
         return {
             'project_name': result['project_name'],
             'generated_at': result['generated_at'],
@@ -94,7 +139,8 @@ class TaskManager:
             'total_files': result['doc_structure']['metadata']['total_files'],
             'modules_count': len(result['doc_structure']['modules']),
             'classes_count': len(result['doc_structure']['classes']),
-            'functions_count': len(result['doc_structure']['functions'])
+            'functions_count': len(result['doc_structure']['functions']),
+            'artifacts': artifacts
         }
 
     def _process_compare_task(self, task):
@@ -103,6 +149,7 @@ class TaskManager:
         zip_path_v2 = task['kwargs'].get('zip_path_v2')
         name_v1 = task['kwargs'].get('name_v1', 'Version 1')
         name_v2 = task['kwargs'].get('name_v2', 'Version 2')
+        scope = task['kwargs'].get('scope', 'public')
 
         if not zip_path_v1 or not os.path.exists(zip_path_v1):
             raise ValueError('ZIP file for version 1 not found')
@@ -113,16 +160,20 @@ class TaskManager:
         os.makedirs(task_output_dir, exist_ok=True)
 
         result = self.processor.compare_versions(
-            zip_path_v1, zip_path_v2, name_v1, name_v2, output_dir=task_output_dir
+            zip_path_v1, zip_path_v2, name_v1, name_v2,
+            output_dir=task_output_dir, scope=scope
         )
         
         download_zip_path = os.path.join(Config.TEMP_OUTPUT_FOLDER, 'tasks', f'{task_id}.zip')
         zip_directory(result['output_dir'], download_zip_path)
 
         task_prefix = f'tasks/{task_id}'
+        artifacts = self._build_artifacts(task_output_dir, task_id)
         return {
             'generated_at': result['generated_at'],
             'task_id': task_id,
+            'scope': scope,
+            'scope_description': result['report']['metadata']['scope_description'],
             'report_json': f'{task_prefix}/comparison_report.json',
             'report_html': f'{task_prefix}/comparison_report.html',
             'download_zip': f'tasks/{task_id}.zip',
@@ -131,7 +182,8 @@ class TaskManager:
             'v1_plantuml': f'{task_prefix}/v1/class_diagram.puml',
             'v2_plantuml': f'{task_prefix}/v2/class_diagram.puml',
             'summary': result['report']['summary'],
-            'total_changes': result['report']['summary']['total_changes']
+            'total_changes': result['report']['summary']['total_changes'],
+            'artifacts': artifacts
         }
 
     def get_task_status(self, task_id):

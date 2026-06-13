@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Version Comparison Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            color: #764ba2;
+            margin: 1.5rem 0 1rem;
+        }
+        h3 {
+            color: #2c3e50;
+            margin: 1rem 0 0.5rem;
+        }
+        .metadata {
+            background: #f0f4ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .metadata p {
+            margin: 0.25rem 0;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .summary-card .number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: block;
+        }
+        .summary-card .label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        .change-item {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid;
+        }
+        .change-item.added {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+        .change-item.removed {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+        .change-item.modified {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+        .change-type {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            color: white;
+        }
+        .change-type.added { background: #4caf50; }
+        .change-type.removed { background: #f44336; }
+        .change-type.modified { background: #ff9800; }
+        .change-message {
+            font-weight: 500;
+        }
+        .change-details {
+            margin-top: 0.5rem;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            color: #666;
+        }
+        .signature {
+            background: #2c3e50;
+            color: #e0e0e0;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            margin: 0.5rem 0;
+            word-break: break-all;
+        }
+        .section {
+            margin: 1.5rem 0;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 0.125rem 0.25rem;
+            border-radius: 3px;
+            font-family: 'Consolas', monospace;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📊 API Version Comparison Report</h1>
+
+    <div class="metadata">
+        <p><strong>Generated:</strong> 2026-06-14T07:30:43.317882</p>
+        <p><strong>Version 1:</strong> Version 1.0 (2026-06-14T07:30:43.246741)</p>
+        <p><strong>Version 2:</strong> Version 2.0 (2026-06-14T07:30:43.294317)</p>
+        <p><strong>Scope:</strong> <span style="background: #4caf50; color: white; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">PUBLIC</span> — Public API only (excludes private, protected, package-private, and internal members)</p>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <span class="number">0</span>
+            <span class="label">Total Changes</span>
+        </div>
+        <div class="summary-card" style="background: linear-gradient(135deg, #4caf50, #45a049);">
+            <span class="number">0</span>
+            <span class="label">Added</span>
+        </div>
+        <div class="summary-card" style="background: linear-gradient(135deg, #f44336, #e53935);">
+            <span class="number">0</span>
+            <span class="label">Removed</span>
+        </div>
+        <div class="summary-card" style="background: linear-gradient(135deg, #ff9800, #f57c00);">
+            <span class="number">0</span>
+            <span class="label">Modified</span>
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+    <div class="empty-state">
+        <h3>✅ No API changes detected between the two versions.</h3>
+    </div>
+    
+</div>
+</body>
+</html>

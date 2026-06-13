@@ -143,6 +143,7 @@
         <p><strong>Generated:</strong> {{ report.metadata.generated_at }}</p>
         <p><strong>Version 1:</strong> {{ report.metadata.v1_project }} ({{ report.metadata.v1_generated_at }})</p>
         <p><strong>Version 2:</strong> {{ report.metadata.v2_project }} ({{ report.metadata.v2_generated_at }})</p>
+        <p><strong>Scope:</strong> <span style="background: {% if report.metadata.comparison_scope == 'public' %}#4caf50{% else %}#ff9800{% endif %}; color: white; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">{{ report.metadata.comparison_scope | upper }}</span> — {{ report.metadata.scope_description }}</p>
     </div>
 
     <div class="summary-grid">

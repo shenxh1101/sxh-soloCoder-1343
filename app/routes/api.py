@@ -77,6 +77,9 @@ def _create_compare_task():
     
     name_v1 = request.form.get('name_v1') or secure_filename(file_v1.filename)
     name_v2 = request.form.get('name_v2') or secure_filename(file_v2.filename)
+    scope = request.form.get('scope', 'public')
+    if scope not in ('public', 'full'):
+        scope = 'public'
     
     unique_id = generate_unique_id()
     zip_path_v1 = os.path.join(Config.UPLOAD_FOLDER, f"{unique_id}_v1_{secure_filename(file_v1.filename)}")
@@ -91,7 +94,8 @@ def _create_compare_task():
         zip_path_v1=zip_path_v1,
         zip_path_v2=zip_path_v2,
         name_v1=name_v1,
-        name_v2=name_v2
+        name_v2=name_v2,
+        scope=scope
     )
     
     return jsonify({
@@ -99,6 +103,7 @@ def _create_compare_task():
         'type': 'compare',
         'status': task['status'],
         'created_at': task['created_at'],
+        'scope': scope,
         'status_url': url_for('api.task_status', task_id=task_id, _external=True)
     }), 202
 
@@ -125,6 +130,15 @@ def task_status(task_id):
     if status['result']:
         result = dict(status['result'])
         response['result'] = result
+        
+        if 'artifacts' in result:
+            for artifact in result['artifacts']:
+                if 'path' in artifact:
+                    artifact['download_url'] = url_for(
+                        'main.download_file',
+                        filename=artifact['path'],
+                        _external=True
+                    )
         
         if status['type'] == 'generate':
             if 'json_path' in result:

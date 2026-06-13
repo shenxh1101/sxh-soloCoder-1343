@@ -99,6 +99,9 @@ def compare():
     
     name_v1 = request.form.get('name_v1', secure_filename(file_v1.filename))
     name_v2 = request.form.get('name_v2', secure_filename(file_v2.filename))
+    scope = request.form.get('scope', 'public')
+    if scope not in ('public', 'full'):
+        scope = 'public'
     
     unique_id = generate_unique_id()
     zip_path_v1 = os.path.join(Config.UPLOAD_FOLDER, f"{unique_id}_v1_{secure_filename(file_v1.filename)}")
@@ -113,7 +116,8 @@ def compare():
         zip_path_v1=zip_path_v1,
         zip_path_v2=zip_path_v2,
         name_v1=name_v1,
-        name_v2=name_v2
+        name_v2=name_v2,
+        scope=scope
     )
     
     return {

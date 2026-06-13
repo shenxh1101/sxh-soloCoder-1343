@@ -137,6 +137,14 @@ def test_api_generate_task(client):
         assert 'plantuml_url' in result_data, "应包含PlantUML下载地址"
         assert 'tasks/' in result_data['json_url'], "JSON URL应包含任务ID路径"
         assert 'tasks/' in result_data['plantuml_url'], "PlantUML URL应包含任务ID路径"
+        assert 'artifacts' in result_data, "应包含产物清单"
+        assert len(result_data['artifacts']) > 0, "产物清单不应为空"
+        artifact = result_data['artifacts'][0]
+        assert 'path' in artifact, "产物项应包含path"
+        assert 'name' in artifact, "产物项应包含name"
+        assert 'size' in artifact, "产物项应包含size"
+        assert 'type' in artifact, "产物项应包含type"
+        assert 'download_url' in artifact, "产物项应包含download_url"
         
         print(f"\n[OK] 任务完成")
         print(f"  - 下载URL: {result_data.get('download_url', 'N/A')}")
@@ -236,6 +244,7 @@ def test_api_compare_task(client):
                 'type': 'compare',
                 'name_v1': 'Version 1.0',
                 'name_v2': 'Version 2.0',
+                'scope': 'public',
                 'file_v1': (f1, 'project_v1.zip'),
                 'file_v2': (f2, 'project_v2.zip')
             }
@@ -286,6 +295,11 @@ def test_api_compare_task(client):
         assert 'v2_plantuml_url' in result_data, "应包含V2 PlantUML地址"
         assert 'tasks/' in result_data['report_json_url'], "报告URL应包含任务ID路径"
         assert '/v1/' in result_data['v1_doc_url'], "V1文档URL应包含v1子路径"
+        assert 'scope' in result_data, "应包含对比口径scope"
+        assert result_data['scope'] == 'public', "默认口径应为public"
+        assert 'scope_description' in result_data, "应包含口径描述"
+        assert 'artifacts' in result_data, "应包含产物清单"
+        assert len(result_data['artifacts']) > 0, "产物清单不应为空"
         
         print(f"\n[OK] 对比任务完成")
         print(f"  - 报告HTML URL: {result_data.get('report_html_url', 'N/A')}")
