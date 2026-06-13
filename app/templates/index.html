@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ metadata.project_name }} - API Documentation</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+{% from '_macros.html' import render_header, render_sidebar %}
+
+{{ render_header(metadata.project_name + ' Documentation', metadata) }}
+
+<div class="container">
+    {{ render_sidebar(metadata, package_structure, modules, classes, functions) }}
+
+    <div class="main-content">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a>
+        </div>
+
+        <h2>📖 API Documentation</h2>
+
+        <div class="metadata">
+            <p><strong>Project:</strong> {{ metadata.project_name }}</p>
+            <p><strong>Generated:</strong> {{ metadata.generated_at }}</p>
+            <p><strong>Version:</strong> {{ metadata.version }}</p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <span class="number">{{ metadata.total_files }}</span>
+                <span class="label">Files</span>
+            </div>
+            <div class="summary-card">
+                <span class="number">{{ modules|length }}</span>
+                <span class="label">Modules</span>
+            </div>
+            <div class="summary-card">
+                <span class="number">{{ classes|length }}</span>
+                <span class="label">Classes</span>
+            </div>
+            <div class="summary-card">
+                <span class="number">{{ functions|length }}</span>
+                <span class="label">Functions</span>
+            </div>
+        </div>
+
+        {% if classes %}
+        <div class="section">
+            <h3>🏷️ Classes</h3>
+            {% for cls in classes %}
+            <div class="class-card">
+                <h4>
+                    <span class="badge {{ cls.language }}">{{ cls.language }}</span>
+                    {% for mod in cls.modifiers %}
+                    <span class="badge {{ mod }}">{{ mod }}</span>
+                    {% endfor %}
+                    {% set safe_name = cls.module.replace('/', '_').replace('\\', '_') + '_' + cls.name %}
+                    <a href="classes/{{ safe_name }}.html">{{ cls.name }}</a>
+                </h4>
+                <p style="color: #666; margin: 0.5rem 0;">Module: {{ cls.module }}</p>
+                {% if cls.description %}
+                <p>{{ cls.description }}</p>
+                {% endif %}
+                {% if cls.inheritance %}
+                <div>
+                    <strong>Inherits:</strong>
+                    <ul class="inheritance-list">
+                    {% for parent in cls.inheritance %}
+                        <li>
+                            {% if parent.is_interface %}<em>implements</em>{% endif %}
+                            {{ parent.name if parent.name is string else parent.name.name }}
+                        </li>
+                        {% if not loop.last %}<li class="inheritance-arrow"></li>{% endif %}
+                    {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if cls.methods %}
+                <p><strong>{{ cls.methods|length }} methods</strong></p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if functions %}
+        <div class="section">
+            <h3>⚡ Global Functions</h3>
+            {% for func in functions %}
+            <div class="function-card">
+                <h4>
+                    <span class="badge {{ func.language }}">{{ func.language }}</span>
+                    {% set safe_name = func.module.replace('/', '_').replace('\\', '_') + '_' + func.name %}
+                    <a href="functions/{{ safe_name }}.html">{{ func.name }}</a>
+                </h4>
+                <p style="color: #666; margin: 0.5rem 0;">Module: {{ func.module }}</p>
+                <div class="signature">{{ func.signature }}</div>
+                {% if func.description %}
+                <p>{{ func.description }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if not classes and not functions %}
+        <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p>No classes or functions found in this project.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

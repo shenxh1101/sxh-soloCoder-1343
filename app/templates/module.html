@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ module.name }} - Module Documentation</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+{% from '_macros.html' import render_header, render_sidebar, render_method %}
+
+{{ render_header(module.name, metadata) }}
+
+<div class="container">
+    {{ render_sidebar(metadata, {}, [], [], []) }}
+
+    <div class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> &rsaquo;
+            <span>{{ module.name }}</span>
+        </div>
+
+        <h2>📚 {{ module.name }}</h2>
+
+        <div class="metadata">
+            <p><span class="badge {{ module.language }}">{{ module.language }}</span></p>
+            <p><strong>Path:</strong> {{ module.full_name }}</p>
+            {% if module.module_path %}
+            <p><strong>Module:</strong> {{ module.module_path }}</p>
+            {% endif %}
+            {% if module.author %}
+            <p><strong>Author:</strong> {{ module.author }}</p>
+            {% endif %}
+            {% if module.version %}
+            <p><strong>Version:</strong> {{ module.version }}</p>
+            {% endif %}
+        </div>
+
+        {% if module.description %}
+        <div class="section">
+            <h3>Description</h3>
+            <div class="description">{{ module.description }}</div>
+        </div>
+        {% endif %}
+
+        {% if module.imports %}
+        <div class="section">
+            <h3>Imports</h3>
+            <ul>
+            {% for imp in module.imports %}
+                <li><code>{{ imp.name }}</code>{% if imp.asname %} as <code>{{ imp.asname }}</code>{% endif %}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if module.classes %}
+        <div class="section">
+            <h3>🏷️ Classes</h3>
+            {% for cls in module.classes %}
+            <div class="class-card">
+                <h4>
+                    {% for mod in cls.modifiers %}
+                    <span class="badge {{ mod }}">{{ mod }}</span>
+                    {% endfor %}
+                    {% set safe_name = module.full_name.replace('/', '_').replace('\\', '_') + '_' + cls.name %}
+                    <a href="../classes/{{ safe_name }}.html">{{ cls.name }}</a>
+                </h4>
+                {% if cls.description %}
+                <p>{{ cls.description }}</p>
+                {% endif %}
+                {% if cls.methods %}
+                <p><strong>{{ cls.methods|length }} methods</strong></p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if module.functions %}
+        <div class="section">
+            <h3>⚡ Functions</h3>
+            {% for func in module.functions %}
+                {% if not func.is_method %}
+                    {{ render_method(func) }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if not module.classes and not module.functions %}
+        <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p>No classes or functions defined in this module.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

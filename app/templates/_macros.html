@@ -1,0 +1,158 @@
+{% macro render_package_tree(tree, parent_path='') -%}
+<ul class="package-tree">
+{% for name, item in tree.items() %}
+    <li>
+    {% if item.type == 'directory' %}
+        <span class="folder-icon"><strong>{{ name }}</strong></span>
+        {{ render_package_tree(item.children, parent_path + '/' + name) }}
+    {% else %}
+        {% set safe_name = item.path.replace('/', '_').replace('\\', '_') %}
+        <a href="modules/{{ safe_name }}.html" class="file-icon">{{ name }}</a>
+        <span class="badge {{ item.language }}" style="font-size: 0.65rem; padding: 0.1rem 0.3rem;">{{ item.language }}</span>
+    {% endif %}
+    </li>
+{% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro render_sidebar(metadata, package_structure, modules, classes, functions) -%}
+<div class="sidebar">
+    <h3>📦 Package Structure</h3>
+    {{ render_package_tree(package_structure) }}
+
+    <h3>📚 Modules</h3>
+    <ul>
+    {% for module in modules %}
+        {% set safe_name = module.full_name.replace('/', '_').replace('\\', '_') %}
+        <li><a href="modules/{{ safe_name }}.html">{{ module.name }}</a></li>
+    {% endfor %}
+    </ul>
+
+    {% if classes %}
+    <h3>🏷️ Classes</h3>
+    <ul>
+    {% for cls in classes %}
+        {% set safe_name = cls.module.replace('/', '_').replace('\\', '_') + '_' + cls.name %}
+        <li><a href="classes/{{ safe_name }}.html">{{ cls.name }}</a></li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if functions %}
+    <h3>⚡ Functions</h3>
+    <ul>
+    {% for func in functions %}
+        {% set safe_name = func.module.replace('/', '_').replace('\\', '_') + '_' + func.name %}
+        <li><a href="functions/{{ safe_name }}.html">{{ func.name }}</a></li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro render_header(title, metadata) -%}
+<header>
+    <h1>{{ title }}</h1>
+    {% if metadata.project_name %}
+    <p style="opacity: 0.9;">{{ metadata.project_name }} - Generated at {{ metadata.generated_at }}</p>
+    {% endif %}
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search modules, classes, functions..." autocomplete="off">
+        <div id="search-results"></div>
+    </div>
+</header>
+<script src="search_data.js"></script>
+<script src="static/js/search.js"></script>
+{%- endmacro %}
+
+{% macro render_parameters(parameters) -%}
+{% if parameters %}
+<table class="parameters-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for param in parameters %}
+        <tr>
+            <td><code>{{ param.name }}</code></td>
+            <td>{% if param.type %}<code>{{ param.type }}</code>{% else %}-{% endif %}</td>
+            <td>{% if param.default_value %}<code>{{ param.default_value }}</code>{% else %}-{% endif %}</td>
+            <td>{{ param.description }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{%- endmacro %}
+
+{% macro render_method(method, class_name='') -%}
+<div class="function-card" id="method-{{ method.name }}">
+    <h4>
+        {% if method.access_modifier %}
+        <span class="badge {{ method.access_modifier }}">{{ method.access_modifier }}</span>
+        {% endif %}
+        {% for mod in method.modifiers %}
+            {% if mod not in ['public', 'private', 'protected'] %}
+            <span class="badge {{ mod }}">{{ mod }}</span>
+            {% endif %}
+        {% endfor %}
+        {% if class_name %}
+        {{ class_name }}.{{ method.name }}
+        {% else %}
+        {{ method.name }}
+        {% endif %}
+    </h4>
+    
+    <div class="signature">{{ method.signature }}</div>
+    
+    {% if method.description %}
+    <div class="description">{{ method.description }}</div>
+    {% endif %}
+    
+    {% if method.author or method.version %}
+    <div style="margin: 0.5rem 0;">
+        {% if method.author %}<span class="tag author">@author {{ method.author }}</span>{% endif %}
+        {% if method.version %}<span class="tag version">@version {{ method.version }}</span>{% endif %}
+    </div>
+    {% endif %}
+    
+    {% if method.parameters %}
+    <h5>Parameters</h5>
+    {{ render_parameters(method.parameters) }}
+    {% endif %}
+    
+    {% if method.return_type %}
+    <div style="margin: 0.75rem 0;">
+        <span class="tag return">Returns</span>
+        <code>{{ method.return_type }}</code>
+        {% if method.return_description %}
+        - {{ method.return_description }}
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    {% if method.exceptions %}
+    <h5>Throws</h5>
+    <ul>
+    {% for ex in method.exceptions %}
+        <li>
+            <span class="tag throws">{{ ex.name }}</span>
+            {% if ex.description %}{{ ex.description }}{% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    
+    {% if method.examples %}
+    <h5>Examples</h5>
+    {% for example in method.examples %}
+    <pre class="code-block">{{ example }}</pre>
+    {% endfor %}
+    {% endif %}
+</div>
+{%- endmacro %}

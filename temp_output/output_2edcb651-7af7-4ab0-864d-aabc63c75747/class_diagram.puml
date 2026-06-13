@@ -1,0 +1,155 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Calculator {
+  - int precision
+  - < 计算结果的小数位数
+    double memory
+  + int precision
+  + code
+     * Calculator calc
+  + * double result
+  + code
+     * Calculator calc
+  + * double result
+  + Calculator(precision: int): 
+  + add(a: double, b: double): double
+  + divide(a: double, b: double): double
+  + getMemory(): double
+  + setMemory(value: double): void
+}
+
+class MathUtil {
+  + fibonacci(n: int): static std::vector<int>
+}
+
+class User {
+  - int id
+  - < 用户ID
+    std::string name
+  - < 用户名
+    std::string email
+}
+
+class Role {
+}
+
+class Container {
+  - std::vector<T> items
+  + add(item: const T&): void
+  + size(): size_t
+}
+
+class SampleModule {
+  - int precision
+  - double memory
+  - Calculator(precision: int): public
+  - Calculator(): public
+  - this(2): 
+  - Calculator(): new
+  - add(a: double, b: double): public double
+  - Calculator(): new
+  - divide(a: double, b: double): public double
+  - ArithmeticException("除数不能为零"): throw new
+  - getMemory(): public double
+  - setMemory(value: double): public void
+  - fibonacci(n: int): public static List<Integer>
+  - IllegalArgumentException("n不能为负数"): throw new
+  - getId(): int
+  - getName(): String
+  - getEmail(): String
+  - greet(name: String, greeting: String): public static String
+  - greet(name: String): public static String
+  - greet(name, "Hello"): return
+  - fetchData(url: String, timeout: int): public static Map<String, Object>
+  - UnsupportedOperationException("示例方法，未实现"): throw new
+}
+
+class Calculator <<static>> {
+  - int precision
+  - double memory
+  + Calculator(precision: int): 
+  + Calculator(): 
+  - this(2): 
+  - add(a: double, b: double): public double
+  - divide(a: double, b: double): public double
+  - ArithmeticException("除数不能为零"): throw new
+  - getMemory(): public double
+  - setMemory(value: double): public void
+}
+
+class MathUtil <<static>> {
+  - fibonacci(n: int): public static List<Integer>
+  - IllegalArgumentException("n不能为负数"): throw new
+}
+
+class User <<interface>> {
+  - getId(): int
+  - getName(): String
+  - getEmail(): String
+}
+
+class Role {
+}
+
+class User <<interface>> {
+  + number id
+  + string name
+  + string email
+}
+
+class Calculator {
+  + precision
+  + precision
+  + precision
+  + precision
+  + _memory
+  + 0
+  + calc
+  + calc
+  + b
+  + _memory
+  + _memory
+  + value
+  + constructor(precision): 
+  + Calculator(): 
+  + add(2, 3): 
+  + add(a: number, b: number): number
+  + Calculator(): 
+  + divide(10, 2): 
+  + divide(a: number, b: number): number
+  + if(b): 
+  + Error("除数不能为零"): 
+  + memory(): 
+  + memory(value): 
+}
+
+class MathUtil {
+  + n
+  + n
+  + result
+  + i
+  + 2
+  + n
+  + result
+  + {static} fibonacci(n: number): number[]
+  + if(n < 0): 
+  + Error("n不能为负数"): 
+  + for(let i): 
+  + push(result[i-1] + result[i-2]): 
+}
+
+class Calculator {
+  + __init__(self, precision: int): 
+  + add(self, a: float, b: float): float
+  + divide(self, a: float, b: float): float
+  + memory(self): float
+  + memory(self, value: float): 
+}
+
+class MathUtil {
+  + fibonacci(n: int): List[int]
+}
+
+
+@enduml

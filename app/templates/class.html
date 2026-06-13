@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ cls.name }} - Class Documentation</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+{% from '_macros.html' import render_header, render_sidebar, render_method, render_parameters %}
+
+{{ render_header(cls.name, metadata) }}
+
+<div class="container">
+    {{ render_sidebar(metadata, {}, [], [], []) }}
+
+    <div class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> &rsaquo;
+            {% set module_safe = cls.module.replace('/', '_').replace('\\', '_') %}
+            <a href="../modules/{{ module_safe }}.html">{{ cls.module }}</a> &rsaquo;
+            <span>{{ cls.name }}</span>
+        </div>
+
+        <h2>🏷️ {{ cls.name }}</h2>
+
+        <div class="metadata">
+            <p>
+                <span class="badge {{ cls.language }}">{{ cls.language }}</span>
+                {% for mod in cls.modifiers %}
+                <span class="badge {{ mod }}">{{ mod }}</span>
+                {% endfor %}
+            </p>
+            <p><strong>Module:</strong> {{ cls.module }}</p>
+            {% if cls.author %}
+            <p><strong>Author:</strong> {{ cls.author }}</p>
+            {% endif %}
+            {% if cls.version %}
+            <p><strong>Version:</strong> {{ cls.version }}</p>
+            {% endif %}
+        </div>
+
+        {% if cls.description %}
+        <div class="section">
+            <h3>Description</h3>
+            <div class="description">{{ cls.description }}</div>
+        </div>
+        {% endif %}
+
+        {% if cls.inheritance %}
+        <div class="section">
+            <h3>Inheritance</h3>
+            <ul class="inheritance-list">
+            {% for parent in cls.inheritance %}
+                <li>
+                    {% if parent.is_interface %}<em>implements</em>{% endif %}
+                    {{ parent.name if parent.name is string else parent.name.name }}
+                    {% if parent.access %}<small>({{ parent.access }})</small>{% endif %}
+                </li>
+                {% if not loop.last %}<li class="inheritance-arrow"></li>{% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if cls.attributes %}
+        <div class="section">
+            <h3>Attributes</h3>
+            <table class="parameters-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Access</th>
+                        <th>Modifiers</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for attr in cls.attributes %}
+                    <tr>
+                        <td><code>{{ attr.name }}</code></td>
+                        <td>{% if attr.type %}<code>{{ attr.type }}</code>{% else %}-{% endif %}</td>
+                        <td><span class="badge {{ attr.access_modifier }}">{{ attr.access_modifier }}</span></td>
+                        <td>
+                            {% for mod in attr.modifiers %}
+                            <span class="badge {{ mod }}">{{ mod }}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if cls.methods %}
+        <div class="section">
+            <h3>Methods</h3>
+            {% for method in cls.methods %}
+                {{ render_method(method, cls.name) }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if not cls.attributes and not cls.methods %}
+        <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <p>No attributes or methods defined in this class.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

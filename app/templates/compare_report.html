@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Version Comparison Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            color: #764ba2;
+            margin: 1.5rem 0 1rem;
+        }
+        h3 {
+            color: #2c3e50;
+            margin: 1rem 0 0.5rem;
+        }
+        .metadata {
+            background: #f0f4ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .metadata p {
+            margin: 0.25rem 0;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .summary-card .number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: block;
+        }
+        .summary-card .label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        .change-item {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid;
+        }
+        .change-item.added {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+        .change-item.removed {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+        .change-item.modified {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+        .change-type {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            color: white;
+        }
+        .change-type.added { background: #4caf50; }
+        .change-type.removed { background: #f44336; }
+        .change-type.modified { background: #ff9800; }
+        .change-message {
+            font-weight: 500;
+        }
+        .change-details {
+            margin-top: 0.5rem;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            color: #666;
+        }
+        .signature {
+            background: #2c3e50;
+            color: #e0e0e0;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            margin: 0.5rem 0;
+            word-break: break-all;
+        }
+        .section {
+            margin: 1.5rem 0;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 0.125rem 0.25rem;
+            border-radius: 3px;
+            font-family: 'Consolas', monospace;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📊 API Version Comparison Report</h1>
+
+    <div class="metadata">
+        <p><strong>Generated:</strong> {{ report.metadata.generated_at }}</p>
+        <p><strong>Version 1:</strong> {{ report.metadata.v1_project }} ({{ report.metadata.v1_generated_at }})</p>
+        <p><strong>Version 2:</strong> {{ report.metadata.v2_project }} ({{ report.metadata.v2_generated_at }})</p>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <span class="number">{{ report.summary.total_changes }}</span>
+            <span class="label">Total Changes</span>
+        </div>
+        <div class="summary-card" style="background: linear-gradient(135deg, #4caf50, #45a049);">
+            <span class="number">{{ report.summary.classes_added + report.summary.functions_added }}</span>
+            <span class="label">Added</span>
+        </div>
+        <div class="summary-card" style="background: linear-gradient(135deg, #f44336, #e53935);">
+            <span class="number">{{ report.summary.classes_removed + report.summary.functions_removed }}</span>
+            <span class="label">Removed</span>
+        </div>
+        <div class="summary-card" style="background: linear-gradient(135deg, #ff9800, #f57c00);">
+            <span class="number">{{ report.summary.classes_modified + report.summary.functions_modified }}</span>
+            <span class="label">Modified</span>
+        </div>
+    </div>
+
+    {% if report.public_api_changes %}
+    <div class="section">
+        <h2>🔄 Public API Changes</h2>
+        {% for change in report.public_api_changes %}
+        <div class="change-item {{ change.type.split('_')[-1] }}">
+            <span class="change-type {{ change.type.split('_')[-1] }}">{{ change.type.split('_')[-1]|upper }}</span>
+            <span class="change-type">{{ change.type.split('_')[0]|upper }}</span>
+            <span class="change-message">{{ change.message }}</span>
+            <div class="change-details">
+                {% if change.module %}<p><strong>Module:</strong> {{ change.module }}</p>{% endif %}
+                {% if change.class %}<p><strong>Class:</strong> {{ change.class }}</p>{% endif %}
+                {% if change.method %}<p><strong>Method:</strong> <code>{{ change.method }}</code></p>{% endif %}
+                {% if change.old_signature %}<p><strong>Old:</strong> <div class="signature">{{ change.old_signature }}</div></p>{% endif %}
+                {% if change.new_signature %}<p><strong>New:</strong> <div class="signature">{{ change.new_signature }}</div></p>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if report.classes.added or report.classes.removed or report.classes.modified %}
+    <div class="section">
+        <h2>🏷️ Class Changes</h2>
+        
+        {% if report.classes.added %}
+        <h3>➕ Added Classes</h3>
+        {% for cls in report.classes.added %}
+        <div class="change-item added">
+            <strong>{{ cls.name }}</strong> ({{ cls.module }})
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if report.classes.removed %}
+        <h3>➖ Removed Classes</h3>
+        {% for cls in report.classes.removed %}
+        <div class="change-item removed">
+            <strong>{{ cls.name }}</strong> ({{ cls.module }})
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if report.classes.modified %}
+        <h3>✏️ Modified Classes</h3>
+        {% for cls in report.classes.modified %}
+        <div class="change-item modified">
+            <strong>{{ cls.name }}</strong> ({{ cls.module }})
+            <div class="change-details">
+                {% if cls.methods_added %}
+                <p><strong>Added methods:</strong></p>
+                {% for m in cls.methods_added %}<div class="signature">{{ m }}</div>{% endfor %}
+                {% endif %}
+                {% if cls.methods_removed %}
+                <p><strong>Removed methods:</strong></p>
+                {% for m in cls.methods_removed %}<div class="signature">{{ m }}</div>{% endfor %}
+                {% endif %}
+                {% if cls.inheritance_changed %}
+                <p><strong>Inheritance changed:</strong> {{ cls.old_inheritance }} → {{ cls.new_inheritance }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if report.functions.added or report.functions.removed or report.functions.modified %}
+    <div class="section">
+        <h2>⚡ Function Changes</h2>
+        
+        {% if report.functions.added %}
+        <h3>➕ Added Functions</h3>
+        {% for func in report.functions.added %}
+        <div class="change-item added">
+            <strong>{{ func.name }}</strong> ({{ func.module }})
+            <div class="signature">{{ func.signature }}</div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if report.functions.removed %}
+        <h3>➖ Removed Functions</h3>
+        {% for func in report.functions.removed %}
+        <div class="change-item removed">
+            <strong>{{ func.name }}</strong> ({{ func.module }})
+            <div class="signature">{{ func.signature }}</div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if report.functions.modified %}
+        <h3>✏️ Modified Functions</h3>
+        {% for func in report.functions.modified %}
+        <div class="change-item modified">
+            <strong>{{ func.name }}</strong> ({{ func.module }})
+            <div class="change-details">
+                <p><strong>Old:</strong> <div class="signature">{{ func.old_signature }}</div></p>
+                <p><strong>New:</strong> <div class="signature">{{ func.new_signature }}</div></p>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if not report.public_api_changes and not report.classes.added and not report.classes.removed and not report.classes.modified and not report.functions.added and not report.functions.removed and not report.functions.modified %}
+    <div class="empty-state">
+        <h3>✅ No API changes detected between the two versions.</h3>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

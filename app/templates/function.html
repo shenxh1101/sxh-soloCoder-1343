@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ func.name }} - Function Documentation</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+{% from '_macros.html' import render_header, render_sidebar, render_method %}
+
+{{ render_header(func.name, metadata) }}
+
+<div class="container">
+    {{ render_sidebar(metadata, {}, [], [], []) }}
+
+    <div class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> &rsaquo;
+            {% set module_safe = func.module.replace('/', '_').replace('\\', '_') %}
+            <a href="../modules/{{ module_safe }}.html">{{ func.module }}</a> &rsaquo;
+            <span>{{ func.name }}</span>
+        </div>
+
+        <h2>⚡ {{ func.name }}</h2>
+
+        <div class="metadata">
+            <p>
+                <span class="badge {{ func.language }}">{{ func.language }}</span>
+                {% if func.access_modifier %}
+                <span class="badge {{ func.access_modifier }}">{{ func.access_modifier }}</span>
+                {% endif %}
+                {% for mod in func.modifiers %}
+                {% if mod not in ['public', 'private', 'protected'] %}
+                <span class="badge {{ mod }}">{{ mod }}</span>
+                {% endif %}
+                {% endfor %}
+            </p>
+            <p><strong>Module:</strong> {{ func.module }}</p>
+            {% if func.author %}
+            <p><strong>Author:</strong> {{ func.author }}</p>
+            {% endif %}
+            {% if func.version %}
+            <p><strong>Version:</strong> {{ func.version }}</p>
+            {% endif %}
+        </div>
+
+        {{ render_method(func) }}
+    </div>
+</div>
+</body>
+</html>

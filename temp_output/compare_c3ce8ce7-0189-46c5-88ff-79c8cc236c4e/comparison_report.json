@@ -1,0 +1,618 @@
+{
+  "metadata": {
+    "generated_at": "2026-06-14T07:00:41.936149",
+    "v1_project": "Version 1.0",
+    "v2_project": "Version 2.0",
+    "v1_generated_at": "2026-06-14T07:00:41.817362",
+    "v2_generated_at": "2026-06-14T07:00:41.910966"
+  },
+  "classes": {
+    "added": [
+      {
+        "name": "MathUtil",
+        "module": "cpp\\sample_module_v2.h",
+        "methods": [
+          "static std::vector<int> fibonacci(int n)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "MathUtil",
+        "module": "javascript\\sample_module_v2.js",
+        "methods": [
+          " Error(any \"n不能为负数\")",
+          " for(any let i)",
+          " if(any n < 0)",
+          " push(any result[i-1] + result[i-2])",
+          "number[] fibonacci(number n)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Role",
+        "module": "cpp\\sample_module_v2.h",
+        "methods": [],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Calculator",
+        "module": "python\\sample_module_v2.py",
+        "methods": [
+          " __init__(any self,int precision)",
+          " memory(any self,float value)",
+          "float add(any self,float a,float b)",
+          "float divide(any self,float a,float b)",
+          "float memory(any self)",
+          "float multiply(any self,float a,float b)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Calculator",
+        "module": "javascript\\sample_module_v2.js",
+        "methods": [
+          " Calculator()",
+          " Calculator()",
+          " Error(any \"除数不能为零\")",
+          " add(any 2,any 3)",
+          " constructor(any precision)",
+          " divide(any 10,any 2)",
+          " if(any b)",
+          " memory()",
+          " memory(any value)",
+          "number add(number a,number b)",
+          "number divide(number a,number b)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Container",
+        "module": "cpp\\sample_module_v2.h",
+        "methods": [
+          "size_t size()",
+          "void add(const T& item)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Calculator",
+        "module": "cpp\\sample_module_v2.h",
+        "methods": [
+          " Calculator(int precision)",
+          "double add(double a,double b)",
+          "double divide(double a,double b)",
+          "double getMemory()",
+          "void setMemory(double value)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "User",
+        "module": "cpp\\sample_module_v2.h",
+        "methods": [],
+        "inheritance": [],
+        "modifiers": [
+          "struct"
+        ]
+      },
+      {
+        "name": "MathUtil",
+        "module": "python\\sample_module_v2.py",
+        "methods": [
+          "List[int] fibonacci(int n)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "User",
+        "module": "javascript\\sample_module_v2.js",
+        "methods": [],
+        "inheritance": [],
+        "modifiers": [
+          "interface"
+        ]
+      }
+    ],
+    "removed": [
+      {
+        "name": "MathUtil",
+        "module": "javascript\\sample_module_v1.js",
+        "methods": [
+          " Error(any \"n不能为负数\")",
+          " for(any let i)",
+          " if(any n < 0)",
+          " push(any result[i-1] + result[i-2])",
+          "number[] fibonacci(number n)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "User",
+        "module": "cpp\\sample_module_v1.h",
+        "methods": [],
+        "inheritance": [],
+        "modifiers": [
+          "struct"
+        ]
+      },
+      {
+        "name": "MathUtil",
+        "module": "cpp\\sample_module_v1.h",
+        "methods": [
+          "static std::vector<int> fibonacci(int n)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "User",
+        "module": "javascript\\sample_module_v1.js",
+        "methods": [],
+        "inheritance": [],
+        "modifiers": [
+          "interface"
+        ]
+      },
+      {
+        "name": "Role",
+        "module": "cpp\\sample_module_v1.h",
+        "methods": [],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "MathUtil",
+        "module": "python\\sample_module_v1.py",
+        "methods": [
+          "List[int] fibonacci(int n)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Calculator",
+        "module": "javascript\\sample_module_v1.js",
+        "methods": [
+          " Calculator()",
+          " Calculator()",
+          " Error(any \"除数不能为零\")",
+          " add(any 2,any 3)",
+          " constructor(any precision)",
+          " divide(any 10,any 2)",
+          " if(any b)",
+          " memory()",
+          " memory(any value)",
+          "number add(number a,number b)",
+          "number divide(number a,number b)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Container",
+        "module": "cpp\\sample_module_v1.h",
+        "methods": [
+          "size_t size()",
+          "void add(const T& item)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Calculator",
+        "module": "python\\sample_module_v1.py",
+        "methods": [
+          " __init__(any self,int precision)",
+          " memory(any self,float value)",
+          "float add(any self,float a,float b)",
+          "float divide(any self,float a,float b)",
+          "float memory(any self)",
+          "float multiply(any self,float a,float b)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      },
+      {
+        "name": "Calculator",
+        "module": "cpp\\sample_module_v1.h",
+        "methods": [
+          " Calculator(int precision)",
+          "double add(double a,double b)",
+          "double divide(double a,double b)",
+          "double getMemory()",
+          "void setMemory(double value)"
+        ],
+        "inheritance": [],
+        "modifiers": []
+      }
+    ],
+    "modified": []
+  },
+  "functions": {
+    "added": [
+      {
+        "name": "fetch_data",
+        "module": "python\\sample_module_v2.py",
+        "signature": "Dict[str, Any] fetch_data(str url,int timeout)",
+        "return_type": "Dict[str, Any]"
+      },
+      {
+        "name": "multiply",
+        "module": "javascript\\sample_module_v2.js",
+        "signature": "number multiply(number a,number b)",
+        "return_type": "number"
+      },
+      {
+        "name": "memory",
+        "module": "cpp\\sample_module_v2.cpp",
+        "signature": ", memory(any 0.0)",
+        "return_type": ","
+      },
+      {
+        "name": "greet",
+        "module": "python\\sample_module_v2.py",
+        "signature": "str greet(str name,str greeting)",
+        "return_type": "str"
+      },
+      {
+        "name": "greet",
+        "module": "cpp\\sample_module_v2.h",
+        "signature": "std::string greet(const std::string& name,const std::string& greeting)",
+        "return_type": "std::string"
+      },
+      {
+        "name": "greet",
+        "module": "cpp\\sample_module_v2.cpp",
+        "signature": "std::string greet(const std::string& name,const std::string& greeting)",
+        "return_type": "std::string"
+      },
+      {
+        "name": "fetchData",
+        "module": "javascript\\sample_module_v2.js",
+        "signature": "number fetchData(string url,any timeout)",
+        "return_type": "number"
+      },
+      {
+        "name": "fetchData",
+        "module": "cpp\\sample_module_v2.h",
+        "signature": "std::map<std::string, std::string> fetchData(const std::string& url,int timeout)",
+        "return_type": "std::map<std::string, std::string>"
+      },
+      {
+        "name": "fetchData",
+        "module": "cpp\\sample_module_v2.cpp",
+        "signature": "std::map<std::string, std::string> fetchData(const std::string& url,int timeout)",
+        "return_type": "std::map<std::string, std::string>"
+      },
+      {
+        "name": "greet",
+        "module": "javascript\\sample_module_v2.js",
+        "signature": "number greet(string name,any greeting)",
+        "return_type": "number"
+      }
+    ],
+    "removed": [
+      {
+        "name": "greet",
+        "module": "cpp\\sample_module_v1.h",
+        "signature": "std::string greet(const std::string& name,const std::string& greeting)",
+        "return_type": "std::string"
+      },
+      {
+        "name": "memory",
+        "module": "cpp\\sample_module_v1.cpp",
+        "signature": ", memory(any 0.0)",
+        "return_type": ","
+      },
+      {
+        "name": "multiply",
+        "module": "javascript\\sample_module_v1.js",
+        "signature": "number multiply(number a,number b)",
+        "return_type": "number"
+      },
+      {
+        "name": "greet",
+        "module": "javascript\\sample_module_v1.js",
+        "signature": "number greet(string name,any greeting)",
+        "return_type": "number"
+      },
+      {
+        "name": "greet",
+        "module": "cpp\\sample_module_v1.cpp",
+        "signature": "std::string greet(const std::string& name,const std::string& greeting)",
+        "return_type": "std::string"
+      },
+      {
+        "name": "fetch_data",
+        "module": "python\\sample_module_v1.py",
+        "signature": "Dict[str, Any] fetch_data(str url,int timeout)",
+        "return_type": "Dict[str, Any]"
+      },
+      {
+        "name": "greet",
+        "module": "python\\sample_module_v1.py",
+        "signature": "str greet(str name,str greeting)",
+        "return_type": "str"
+      },
+      {
+        "name": "fetchData",
+        "module": "cpp\\sample_module_v1.h",
+        "signature": "std::map<std::string, std::string> fetchData(const std::string& url,int timeout)",
+        "return_type": "std::map<std::string, std::string>"
+      },
+      {
+        "name": "fetchData",
+        "module": "javascript\\sample_module_v1.js",
+        "signature": "number fetchData(string url,any timeout)",
+        "return_type": "number"
+      },
+      {
+        "name": "fetchData",
+        "module": "cpp\\sample_module_v1.cpp",
+        "signature": "std::map<std::string, std::string> fetchData(const std::string& url,int timeout)",
+        "return_type": "std::map<std::string, std::string>"
+      }
+    ],
+    "modified": []
+  },
+  "public_api_changes": [
+    {
+      "type": "class_removed",
+      "name": "MathUtil",
+      "module": "javascript\\sample_module_v1.js",
+      "message": "Class 'MathUtil' has been removed from module 'javascript\\sample_module_v1.js'"
+    },
+    {
+      "type": "class_removed",
+      "name": "User",
+      "module": "cpp\\sample_module_v1.h",
+      "message": "Class 'User' has been removed from module 'cpp\\sample_module_v1.h'"
+    },
+    {
+      "type": "class_added",
+      "name": "MathUtil",
+      "module": "cpp\\sample_module_v2.h",
+      "message": "New class 'MathUtil' has been added to module 'cpp\\sample_module_v2.h'"
+    },
+    {
+      "type": "class_removed",
+      "name": "MathUtil",
+      "module": "cpp\\sample_module_v1.h",
+      "message": "Class 'MathUtil' has been removed from module 'cpp\\sample_module_v1.h'"
+    },
+    {
+      "type": "class_removed",
+      "name": "User",
+      "module": "javascript\\sample_module_v1.js",
+      "message": "Class 'User' has been removed from module 'javascript\\sample_module_v1.js'"
+    },
+    {
+      "type": "class_removed",
+      "name": "Role",
+      "module": "cpp\\sample_module_v1.h",
+      "message": "Class 'Role' has been removed from module 'cpp\\sample_module_v1.h'"
+    },
+    {
+      "type": "class_added",
+      "name": "MathUtil",
+      "module": "javascript\\sample_module_v2.js",
+      "message": "New class 'MathUtil' has been added to module 'javascript\\sample_module_v2.js'"
+    },
+    {
+      "type": "class_added",
+      "name": "Role",
+      "module": "cpp\\sample_module_v2.h",
+      "message": "New class 'Role' has been added to module 'cpp\\sample_module_v2.h'"
+    },
+    {
+      "type": "class_added",
+      "name": "Calculator",
+      "module": "python\\sample_module_v2.py",
+      "message": "New class 'Calculator' has been added to module 'python\\sample_module_v2.py'"
+    },
+    {
+      "type": "class_added",
+      "name": "Calculator",
+      "module": "javascript\\sample_module_v2.js",
+      "message": "New class 'Calculator' has been added to module 'javascript\\sample_module_v2.js'"
+    },
+    {
+      "type": "class_added",
+      "name": "Container",
+      "module": "cpp\\sample_module_v2.h",
+      "message": "New class 'Container' has been added to module 'cpp\\sample_module_v2.h'"
+    },
+    {
+      "type": "class_added",
+      "name": "Calculator",
+      "module": "cpp\\sample_module_v2.h",
+      "message": "New class 'Calculator' has been added to module 'cpp\\sample_module_v2.h'"
+    },
+    {
+      "type": "class_added",
+      "name": "User",
+      "module": "cpp\\sample_module_v2.h",
+      "message": "New class 'User' has been added to module 'cpp\\sample_module_v2.h'"
+    },
+    {
+      "type": "class_added",
+      "name": "MathUtil",
+      "module": "python\\sample_module_v2.py",
+      "message": "New class 'MathUtil' has been added to module 'python\\sample_module_v2.py'"
+    },
+    {
+      "type": "class_removed",
+      "name": "MathUtil",
+      "module": "python\\sample_module_v1.py",
+      "message": "Class 'MathUtil' has been removed from module 'python\\sample_module_v1.py'"
+    },
+    {
+      "type": "class_removed",
+      "name": "Calculator",
+      "module": "javascript\\sample_module_v1.js",
+      "message": "Class 'Calculator' has been removed from module 'javascript\\sample_module_v1.js'"
+    },
+    {
+      "type": "class_removed",
+      "name": "Container",
+      "module": "cpp\\sample_module_v1.h",
+      "message": "Class 'Container' has been removed from module 'cpp\\sample_module_v1.h'"
+    },
+    {
+      "type": "class_removed",
+      "name": "Calculator",
+      "module": "python\\sample_module_v1.py",
+      "message": "Class 'Calculator' has been removed from module 'python\\sample_module_v1.py'"
+    },
+    {
+      "type": "class_removed",
+      "name": "Calculator",
+      "module": "cpp\\sample_module_v1.h",
+      "message": "Class 'Calculator' has been removed from module 'cpp\\sample_module_v1.h'"
+    },
+    {
+      "type": "class_added",
+      "name": "User",
+      "module": "javascript\\sample_module_v2.js",
+      "message": "New class 'User' has been added to module 'javascript\\sample_module_v2.js'"
+    },
+    {
+      "type": "function_removed",
+      "name": "greet",
+      "module": "cpp\\sample_module_v1.h",
+      "message": "Function 'greet' has been removed from module 'cpp\\sample_module_v1.h'"
+    },
+    {
+      "type": "function_added",
+      "name": "fetch_data",
+      "module": "python\\sample_module_v2.py",
+      "message": "New function 'fetch_data' has been added to module 'python\\sample_module_v2.py'"
+    },
+    {
+      "type": "function_added",
+      "name": "multiply",
+      "module": "javascript\\sample_module_v2.js",
+      "message": "New function 'multiply' has been added to module 'javascript\\sample_module_v2.js'"
+    },
+    {
+      "type": "function_added",
+      "name": "memory",
+      "module": "cpp\\sample_module_v2.cpp",
+      "message": "New function 'memory' has been added to module 'cpp\\sample_module_v2.cpp'"
+    },
+    {
+      "type": "function_removed",
+      "name": "memory",
+      "module": "cpp\\sample_module_v1.cpp",
+      "message": "Function 'memory' has been removed from module 'cpp\\sample_module_v1.cpp'"
+    },
+    {
+      "type": "function_added",
+      "name": "greet",
+      "module": "python\\sample_module_v2.py",
+      "message": "New function 'greet' has been added to module 'python\\sample_module_v2.py'"
+    },
+    {
+      "type": "function_added",
+      "name": "greet",
+      "module": "cpp\\sample_module_v2.h",
+      "message": "New function 'greet' has been added to module 'cpp\\sample_module_v2.h'"
+    },
+    {
+      "type": "function_added",
+      "name": "greet",
+      "module": "cpp\\sample_module_v2.cpp",
+      "message": "New function 'greet' has been added to module 'cpp\\sample_module_v2.cpp'"
+    },
+    {
+      "type": "function_added",
+      "name": "fetchData",
+      "module": "javascript\\sample_module_v2.js",
+      "message": "New function 'fetchData' has been added to module 'javascript\\sample_module_v2.js'"
+    },
+    {
+      "type": "function_removed",
+      "name": "multiply",
+      "module": "javascript\\sample_module_v1.js",
+      "message": "Function 'multiply' has been removed from module 'javascript\\sample_module_v1.js'"
+    },
+    {
+      "type": "function_removed",
+      "name": "greet",
+      "module": "javascript\\sample_module_v1.js",
+      "message": "Function 'greet' has been removed from module 'javascript\\sample_module_v1.js'"
+    },
+    {
+      "type": "function_removed",
+      "name": "greet",
+      "module": "cpp\\sample_module_v1.cpp",
+      "message": "Function 'greet' has been removed from module 'cpp\\sample_module_v1.cpp'"
+    },
+    {
+      "type": "function_added",
+      "name": "fetchData",
+      "module": "cpp\\sample_module_v2.h",
+      "message": "New function 'fetchData' has been added to module 'cpp\\sample_module_v2.h'"
+    },
+    {
+      "type": "function_removed",
+      "name": "fetch_data",
+      "module": "python\\sample_module_v1.py",
+      "message": "Function 'fetch_data' has been removed from module 'python\\sample_module_v1.py'"
+    },
+    {
+      "type": "function_removed",
+      "name": "greet",
+      "module": "python\\sample_module_v1.py",
+      "message": "Function 'greet' has been removed from module 'python\\sample_module_v1.py'"
+    },
+    {
+      "type": "function_removed",
+      "name": "fetchData",
+      "module": "cpp\\sample_module_v1.h",
+      "message": "Function 'fetchData' has been removed from module 'cpp\\sample_module_v1.h'"
+    },
+    {
+      "type": "function_added",
+      "name": "fetchData",
+      "module": "cpp\\sample_module_v2.cpp",
+      "message": "New function 'fetchData' has been added to module 'cpp\\sample_module_v2.cpp'"
+    },
+    {
+      "type": "function_added",
+      "name": "greet",
+      "module": "javascript\\sample_module_v2.js",
+      "message": "New function 'greet' has been added to module 'javascript\\sample_module_v2.js'"
+    },
+    {
+      "type": "function_removed",
+      "name": "fetchData",
+      "module": "javascript\\sample_module_v1.js",
+      "message": "Function 'fetchData' has been removed from module 'javascript\\sample_module_v1.js'"
+    },
+    {
+      "type": "function_removed",
+      "name": "fetchData",
+      "module": "cpp\\sample_module_v1.cpp",
+      "message": "Function 'fetchData' has been removed from module 'cpp\\sample_module_v1.cpp'"
+    }
+  ],
+  "summary": {
+    "total_changes": 40,
+    "classes_added": 10,
+    "classes_removed": 10,
+    "classes_modified": 0,
+    "functions_added": 10,
+    "functions_removed": 10,
+    "functions_modified": 0
+  }
+}
