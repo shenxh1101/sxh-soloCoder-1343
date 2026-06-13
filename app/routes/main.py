@@ -37,19 +37,17 @@ def preview(preview_id, filename='index.html'):
 
 @main_bp.route('/download/<path:filename>')
 def download_file(filename):
-    safe_filename = os.path.basename(filename)
-    file_path = os.path.join(Config.TEMP_OUTPUT_FOLDER, safe_filename)
+    base_dir = os.path.abspath(Config.TEMP_OUTPUT_FOLDER)
+    file_path = os.path.abspath(os.path.join(base_dir, filename))
     
-    if not os.path.exists(file_path):
-        for item in os.listdir(Config.TEMP_OUTPUT_FOLDER):
-            item_path = os.path.join(Config.TEMP_OUTPUT_FOLDER, item)
-            if os.path.isdir(item_path):
-                candidate = os.path.join(item_path, safe_filename)
-                if os.path.exists(candidate):
-                    return send_file(candidate, as_attachment=True)
-        abort(404)
+    if not file_path.startswith(base_dir):
+        abort(400, 'Invalid path')
     
-    return send_file(file_path, as_attachment=True)
+    if not os.path.exists(file_path) or not os.path.isfile(file_path):
+        abort(404, 'File not found')
+    
+    download_name = os.path.basename(file_path)
+    return send_file(file_path, as_attachment=True, download_name=download_name)
 
 @main_bp.route('/generate', methods=['POST'])
 def generate():

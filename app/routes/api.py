@@ -123,26 +123,79 @@ def task_status(task_id):
         response['error'] = status['error']
     
     if status['result']:
-        response['result'] = status['result']
-        if 'download_zip' in status['result']:
-            response['result']['download_url'] = url_for(
-                'main.download_file',
-                filename=status['result']['download_zip'],
-                _external=True
-            )
-        if 'preview_url' in status['result']:
-            response['result']['preview_url'] = url_for(
-                'main.preview',
-                preview_id=status['result']['preview_id'],
-                filename='index.html',
-                _external=True
-            )
-        if 'report_html' in status['result']:
-            response['result']['report_url'] = url_for(
-                'main.download_file',
-                filename=status['result']['report_html'],
-                _external=True
-            )
+        result = dict(status['result'])
+        response['result'] = result
+        
+        if status['type'] == 'generate':
+            if 'json_path' in result:
+                result['json_url'] = url_for(
+                    'main.download_file',
+                    filename=result['json_path'],
+                    _external=True
+                )
+            if 'plantuml_path' in result:
+                result['plantuml_url'] = url_for(
+                    'main.download_file',
+                    filename=result['plantuml_path'],
+                    _external=True
+                )
+            if 'download_zip' in result:
+                result['download_url'] = url_for(
+                    'main.download_file',
+                    filename=result['download_zip'],
+                    _external=True
+                )
+            if 'preview_id' in result:
+                result['preview_url'] = url_for(
+                    'main.preview',
+                    preview_id=result['preview_id'],
+                    filename='index.html',
+                    _external=True
+                )
+        
+        elif status['type'] == 'compare':
+            if 'report_json' in result:
+                result['report_json_url'] = url_for(
+                    'main.download_file',
+                    filename=result['report_json'],
+                    _external=True
+                )
+            if 'report_html' in result:
+                result['report_html_url'] = url_for(
+                    'main.download_file',
+                    filename=result['report_html'],
+                    _external=True
+                )
+            if 'download_zip' in result:
+                result['download_url'] = url_for(
+                    'main.download_file',
+                    filename=result['download_zip'],
+                    _external=True
+                )
+            if 'v1_doc' in result:
+                result['v1_doc_url'] = url_for(
+                    'main.download_file',
+                    filename=result['v1_doc'],
+                    _external=True
+                )
+            if 'v2_doc' in result:
+                result['v2_doc_url'] = url_for(
+                    'main.download_file',
+                    filename=result['v2_doc'],
+                    _external=True
+                )
+            if 'v1_plantuml' in result:
+                result['v1_plantuml_url'] = url_for(
+                    'main.download_file',
+                    filename=result['v1_plantuml'],
+                    _external=True
+                )
+            if 'v2_plantuml' in result:
+                result['v2_plantuml_url'] = url_for(
+                    'main.download_file',
+                    filename=result['v2_plantuml'],
+                    _external=True
+                )
     
     return jsonify(response), 200
 

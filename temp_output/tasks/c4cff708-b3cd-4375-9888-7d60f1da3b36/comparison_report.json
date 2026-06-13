@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "generated_at": "2026-06-14T07:23:47.556575",
+    "v1_project": "Version 1.0",
+    "v2_project": "Version 2.0",
+    "v1_generated_at": "2026-06-14T07:23:47.484248",
+    "v2_generated_at": "2026-06-14T07:23:47.532434"
+  },
+  "classes": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "functions": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "public_api_changes": [],
+  "summary": {
+    "total_changes": 0,
+    "classes_added": 0,
+    "classes_removed": 0,
+    "classes_modified": 0,
+    "functions_added": 0,
+    "functions_removed": 0,
+    "functions_modified": 0
+  }
+}

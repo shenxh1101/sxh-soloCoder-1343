@@ -133,23 +133,27 @@ def test_api_generate_task(client):
         assert 'download_zip' in result_data or 'download_url' in result_data
         assert 'preview_id' in result_data
         assert 'preview_url' in result_data
+        assert 'json_url' in result_data, "应包含结构化JSON下载地址"
+        assert 'plantuml_url' in result_data, "应包含PlantUML下载地址"
+        assert 'tasks/' in result_data['json_url'], "JSON URL应包含任务ID路径"
+        assert 'tasks/' in result_data['plantuml_url'], "PlantUML URL应包含任务ID路径"
         
         print(f"\n[OK] 任务完成")
         print(f"  - 下载URL: {result_data.get('download_url', 'N/A')}")
         print(f"  - 预览URL: {result_data.get('preview_url', 'N/A')}")
+        print(f"  - JSON URL: {result_data.get('json_url', 'N/A')}")
+        print(f"  - PlantUML URL: {result_data.get('plantuml_url', 'N/A')}")
         
-        # 测试下载链接
-        if 'download_url' in result_data:
-            download_response = client.get(result_data['download_url'].replace('http://localhost', ''))
-            assert download_response.status_code == 200
-            print(f"[OK] 下载链接可访问")
+        def _test_url(name, url):
+            path = url.replace('http://localhost', '')
+            response = client.get(path)
+            assert response.status_code == 200, f"{name}链接应可访问: {path}"
+            print(f"[OK] {name}链接可访问")
         
-        # 测试预览链接
-        if 'preview_url' in result_data:
-            preview_path = result_data['preview_url'].replace('http://localhost', '')
-            preview_response = client.get(preview_path)
-            assert preview_response.status_code == 200
-            print(f"[OK] 预览链接可访问")
+        _test_url("文档站下载", result_data['download_url'])
+        _test_url("预览", result_data['preview_url'])
+        _test_url("JSON文档", result_data['json_url'])
+        _test_url("PlantUML", result_data['plantuml_url'])
         
         print("\n[OK] API生成任务测试通过!")
         
@@ -273,9 +277,36 @@ def test_api_compare_task(client):
         assert final_status['status'] == 'completed'
         
         result_data = final_status.get('result', {})
+        assert 'report_json_url' in result_data, "应包含对比报告JSON地址"
+        assert 'report_html_url' in result_data, "应包含对比报告HTML地址"
+        assert 'download_url' in result_data, "应包含打包下载地址"
+        assert 'v1_doc_url' in result_data, "应包含V1文档JSON地址"
+        assert 'v2_doc_url' in result_data, "应包含V2文档JSON地址"
+        assert 'v1_plantuml_url' in result_data, "应包含V1 PlantUML地址"
+        assert 'v2_plantuml_url' in result_data, "应包含V2 PlantUML地址"
+        assert 'tasks/' in result_data['report_json_url'], "报告URL应包含任务ID路径"
+        assert '/v1/' in result_data['v1_doc_url'], "V1文档URL应包含v1子路径"
+        
         print(f"\n[OK] 对比任务完成")
-        if 'report_url' in result_data:
-            print(f"  - 报告URL: {result_data['report_url']}")
+        print(f"  - 报告HTML URL: {result_data.get('report_html_url', 'N/A')}")
+        print(f"  - 报告JSON URL: {result_data.get('report_json_url', 'N/A')}")
+        print(f"  - 打包下载URL: {result_data.get('download_url', 'N/A')}")
+        print(f"  - V1文档URL: {result_data.get('v1_doc_url', 'N/A')}")
+        print(f"  - V2文档URL: {result_data.get('v2_doc_url', 'N/A')}")
+        print(f"  - V1 PlantUML URL: {result_data.get('v1_plantuml_url', 'N/A')}")
+        print(f"  - V2 PlantUML URL: {result_data.get('v2_plantuml_url', 'N/A')}")
+        
+        def _test_url(name, url):
+            path = url.replace('http://localhost', '')
+            response = client.get(path)
+            assert response.status_code == 200, f"{name}链接应可访问: {path}"
+            print(f"[OK] {name}链接可访问")
+        
+        _test_url("对比报告HTML", result_data['report_html_url'])
+        _test_url("对比报告JSON", result_data['report_json_url'])
+        _test_url("V1文档JSON", result_data['v1_doc_url'])
+        _test_url("V2文档JSON", result_data['v2_doc_url'])
+        _test_url("打包下载", result_data['download_url'])
         
         print("\n[OK] API版本对比任务测试通过!")
         

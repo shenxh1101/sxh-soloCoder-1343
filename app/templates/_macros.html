@@ -1,13 +1,13 @@
-{% macro render_package_tree(tree, parent_path='') -%}
+{% macro render_package_tree(tree, parent_path='', base_path='') -%}
 <ul class="package-tree">
 {% for name, item in tree.items() %}
     <li>
     {% if item.type == 'directory' %}
         <span class="folder-icon"><strong>{{ name }}</strong></span>
-        {{ render_package_tree(item.children, parent_path + '/' + name) }}
+        {{ render_package_tree(item.children, parent_path + '/' + name, base_path) }}
     {% else %}
         {% set safe_name = item.path.replace('/', '_').replace('\\', '_') %}
-        <a href="modules/{{ safe_name }}.html" class="file-icon">{{ name }}</a>
+        <a href="{{ base_path }}modules/{{ safe_name }}.html" class="file-icon">{{ name }}</a>
         <span class="badge {{ item.language }}" style="font-size: 0.65rem; padding: 0.1rem 0.3rem;">{{ item.language }}</span>
     {% endif %}
     </li>
@@ -15,16 +15,16 @@
 </ul>
 {%- endmacro %}
 
-{% macro render_sidebar(metadata, package_structure, modules, classes, functions) -%}
+{% macro render_sidebar(metadata, package_structure, modules, classes, functions, base_path='') -%}
 <div class="sidebar">
     <h3>📦 Package Structure</h3>
-    {{ render_package_tree(package_structure) }}
+    {{ render_package_tree(package_structure, '', base_path) }}
 
     <h3>📚 Modules</h3>
     <ul>
     {% for module in modules %}
         {% set safe_name = module.full_name.replace('/', '_').replace('\\', '_') %}
-        <li><a href="modules/{{ safe_name }}.html">{{ module.name }}</a></li>
+        <li><a href="{{ base_path }}modules/{{ safe_name }}.html">{{ module.name }}</a></li>
     {% endfor %}
     </ul>
 
@@ -33,7 +33,7 @@
     <ul>
     {% for cls in classes %}
         {% set safe_name = cls.module.replace('/', '_').replace('\\', '_') + '_' + cls.name %}
-        <li><a href="classes/{{ safe_name }}.html">{{ cls.name }}</a></li>
+        <li><a href="{{ base_path }}classes/{{ safe_name }}.html">{{ cls.name }}</a></li>
     {% endfor %}
     </ul>
     {% endif %}
@@ -43,26 +43,26 @@
     <ul>
     {% for func in functions %}
         {% set safe_name = func.module.replace('/', '_').replace('\\', '_') + '_' + func.name %}
-        <li><a href="functions/{{ safe_name }}.html">{{ func.name }}</a></li>
+        <li><a href="{{ base_path }}functions/{{ safe_name }}.html">{{ func.name }}</a></li>
     {% endfor %}
     </ul>
     {% endif %}
 </div>
 {%- endmacro %}
 
-{% macro render_header(title, metadata) -%}
+{% macro render_header(title, metadata, base_path='') -%}
 <header>
     <h1>{{ title }}</h1>
     {% if metadata.project_name %}
     <p style="opacity: 0.9;">{{ metadata.project_name }} - Generated at {{ metadata.generated_at }}</p>
     {% endif %}
     <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search modules, classes, functions..." autocomplete="off">
+        <input type="text" id="search-input" placeholder="Search modules, classes, functions..." autocomplete="off" data-base-path="{{ base_path }}">
         <div id="search-results"></div>
     </div>
 </header>
-<script src="search_data.js"></script>
-<script src="static/js/search.js"></script>
+<script src="{{ base_path }}search_data.js"></script>
+<script src="{{ base_path }}static/js/search.js"></script>
 {%- endmacro %}
 
 {% macro render_parameters(parameters) -%}

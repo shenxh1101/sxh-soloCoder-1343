@@ -1,12 +1,35 @@
 import json
 from datetime import datetime
 
+PUBLIC_ACCESS = {'public', 'package-private', None}
+
+def _is_public_method(method):
+    access = method.get('access_modifier')
+    if access in PUBLIC_ACCESS:
+        return True
+    name = method.get('name', '')
+    if name.startswith('_') and not name.startswith('__') and not name.endswith('__'):
+        return False
+    if name.startswith('__') and not name.endswith('__'):
+        return False
+    return access not in ('private', 'protected')
+
+def _is_public_class(cls):
+    modifiers = cls.get('modifiers', [])
+    if 'private' in modifiers or 'protected' in modifiers:
+        return False
+    return True
+
 def _get_class_signatures(doc):
     signatures = {}
     for cls in doc.get('classes', []):
+        if not _is_public_class(cls):
+            continue
         key = f"{cls['module']}::{cls['name']}"
         methods = []
         for method in cls.get('methods', []):
+            if not _is_public_method(method):
+                continue
             params = ','.join([f"{p['type'] if p.get('type') else 'any'} {p['name']}" for p in method.get('parameters', [])])
             ret_type = method.get('return_type', 'void')
             methods.append(f"{ret_type} {method['name']}({params})")

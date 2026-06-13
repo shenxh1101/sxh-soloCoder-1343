@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ metadata.project_name }} - API Documentation</title>
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="{{ base_path }}static/css/style.css">
 </head>
 <body>
 {% from '_macros.html' import render_header, render_sidebar %}
 
-{{ render_header(metadata.project_name + ' Documentation', metadata) }}
+{{ render_header(metadata.project_name + ' Documentation', metadata, base_path) }}
 
 <div class="container">
-    {{ render_sidebar(metadata, package_structure, modules, classes, functions) }}
+    {{ render_sidebar(metadata, package_structure, modules, classes, functions, base_path) }}
 
     <div class="main-content">
         <div class="breadcrumb">
-            <a href="index.html">Home</a>
+            <a href="{{ base_path }}index.html">Home</a>
         </div>
 
         <h2>📖 API Documentation</h2>
@@ -57,7 +57,7 @@
                     <span class="badge {{ mod }}">{{ mod }}</span>
                     {% endfor %}
                     {% set safe_name = cls.module.replace('/', '_').replace('\\', '_') + '_' + cls.name %}
-                    <a href="classes/{{ safe_name }}.html">{{ cls.name }}</a>
+                    <a href="{{ base_path }}classes/{{ safe_name }}.html">{{ cls.name }}</a>
                 </h4>
                 <p style="color: #666; margin: 0.5rem 0;">Module: {{ cls.module }}</p>
                 {% if cls.description %}
@@ -93,7 +93,7 @@
                 <h4>
                     <span class="badge {{ func.language }}">{{ func.language }}</span>
                     {% set safe_name = func.module.replace('/', '_').replace('\\', '_') + '_' + func.name %}
-                    <a href="functions/{{ safe_name }}.html">{{ func.name }}</a>
+                    <a href="{{ base_path }}functions/{{ safe_name }}.html">{{ func.name }}</a>
                 </h4>
                 <p style="color: #666; margin: 0.5rem 0;">Module: {{ func.module }}</p>
                 <div class="signature">{{ func.signature }}</div>

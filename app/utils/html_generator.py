@@ -39,7 +39,8 @@ class HTMLGenerator:
             modules=doc_structure['modules'],
             classes=doc_structure['classes'],
             functions=doc_structure['functions'],
-            active_tab='modules'
+            active_tab='modules',
+            base_path=''
         )
         with open(os.path.join(output_dir, 'modules.html'), 'w', encoding='utf-8') as f:
             f.write(html)
@@ -52,7 +53,8 @@ class HTMLGenerator:
             modules=doc_structure['modules'],
             classes=doc_structure['classes'],
             functions=doc_structure['functions'],
-            active_tab='classes'
+            active_tab='classes',
+            base_path=''
         )
         with open(os.path.join(output_dir, 'classes.html'), 'w', encoding='utf-8') as f:
             f.write(html)
@@ -65,7 +67,8 @@ class HTMLGenerator:
             modules=doc_structure['modules'],
             classes=doc_structure['classes'],
             functions=doc_structure['functions'],
-            active_tab='functions'
+            active_tab='functions',
+            base_path=''
         )
         with open(os.path.join(output_dir, 'functions.html'), 'w', encoding='utf-8') as f:
             f.write(html)
@@ -77,7 +80,8 @@ class HTMLGenerator:
             package_structure=doc_structure['package_structure'],
             modules=doc_structure['modules'],
             classes=doc_structure['classes'],
-            functions=doc_structure['functions']
+            functions=doc_structure['functions'],
+            base_path=''
         )
         with open(os.path.join(output_dir, 'index.html'), 'w', encoding='utf-8') as f:
             f.write(html)
@@ -91,7 +95,8 @@ class HTMLGenerator:
         for module in doc_structure['modules']:
             html = template.render(
                 module=module,
-                metadata=doc_structure['metadata']
+                metadata=doc_structure['metadata'],
+                base_path='../'
             )
             safe_name = module['full_name'].replace('/', '_').replace('\\', '_')
             with open(os.path.join(modules_dir, f'{safe_name}.html'), 'w', encoding='utf-8') as f:
@@ -106,7 +111,8 @@ class HTMLGenerator:
         for cls in doc_structure['classes']:
             html = template.render(
                 cls=cls,
-                metadata=doc_structure['metadata']
+                metadata=doc_structure['metadata'],
+                base_path='../'
             )
             safe_name = f"{cls['module'].replace('/', '_').replace('\\', '_')}_{cls['name']}"
             with open(os.path.join(classes_dir, f'{safe_name}.html'), 'w', encoding='utf-8') as f:
@@ -124,7 +130,8 @@ class HTMLGenerator:
         for func in doc_structure['functions']:
             html = template.render(
                 func=func,
-                metadata=doc_structure['metadata']
+                metadata=doc_structure['metadata'],
+                base_path='../'
             )
             safe_name = f"{func['module'].replace('/', '_').replace('\\', '_')}_{func['name']}"
             with open(os.path.join(functions_dir, f'{safe_name}.html'), 'w', encoding='utf-8') as f:

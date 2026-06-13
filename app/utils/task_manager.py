@@ -6,7 +6,7 @@ from datetime import datetime
 from app import tasks, tasks_lock
 from app.config import Config
 from app.utils.doc_processor import DocumentationProcessor
-from app.utils.file_utils import generate_unique_id, cleanup_expired_previews
+from app.utils.file_utils import generate_unique_id, cleanup_expired_previews, zip_directory
 
 class TaskManager:
     def __init__(self):
@@ -62,26 +62,33 @@ class TaskManager:
                 task['error'] = str(e)
 
     def _process_generate_task(self, task):
+        task_id = task['id']
         zip_path = task['kwargs'].get('zip_path')
         project_name = task['kwargs'].get('project_name')
 
         if not zip_path or not os.path.exists(zip_path):
             raise ValueError('ZIP file not found')
 
-        result = self.processor.process_zip(zip_path, project_name)
+        task_output_dir = os.path.join(Config.TEMP_OUTPUT_FOLDER, 'tasks', task_id)
+        os.makedirs(task_output_dir, exist_ok=True)
+
+        result = self.processor.process_zip(zip_path, project_name, output_dir=task_output_dir)
         
-        download_zip = self.processor.package_for_download(result['output_dir'])
+        download_zip_path = os.path.join(Config.TEMP_OUTPUT_FOLDER, 'tasks', f'{task_id}.zip')
+        zip_directory(result['output_dir'], download_zip_path)
         
         preview_id, preview_dir = self.processor.create_preview(result['html_dir'])
 
         cleanup_expired_previews()
 
+        task_prefix = f'tasks/{task_id}'
         return {
             'project_name': result['project_name'],
             'generated_at': result['generated_at'],
-            'json_path': os.path.basename(result['json_path']),
-            'plantuml_path': os.path.basename(result['plantuml_path']),
-            'download_zip': os.path.basename(download_zip),
+            'task_id': task_id,
+            'json_path': f'{task_prefix}/documentation.json',
+            'plantuml_path': f'{task_prefix}/class_diagram.puml',
+            'download_zip': f'tasks/{task_id}.zip',
             'preview_id': preview_id,
             'preview_url': f'/preview/{preview_id}/index.html',
             'total_files': result['doc_structure']['metadata']['total_files'],
@@ -91,6 +98,7 @@ class TaskManager:
         }
 
     def _process_compare_task(self, task):
+        task_id = task['id']
         zip_path_v1 = task['kwargs'].get('zip_path_v1')
         zip_path_v2 = task['kwargs'].get('zip_path_v2')
         name_v1 = task['kwargs'].get('name_v1', 'Version 1')
@@ -101,17 +109,27 @@ class TaskManager:
         if not zip_path_v2 or not os.path.exists(zip_path_v2):
             raise ValueError('ZIP file for version 2 not found')
 
-        result = self.processor.compare_versions(zip_path_v1, zip_path_v2, name_v1, name_v2)
-        
-        download_zip = self.processor.package_for_download(result['output_dir'])
+        task_output_dir = os.path.join(Config.TEMP_OUTPUT_FOLDER, 'tasks', task_id)
+        os.makedirs(task_output_dir, exist_ok=True)
 
+        result = self.processor.compare_versions(
+            zip_path_v1, zip_path_v2, name_v1, name_v2, output_dir=task_output_dir
+        )
+        
+        download_zip_path = os.path.join(Config.TEMP_OUTPUT_FOLDER, 'tasks', f'{task_id}.zip')
+        zip_directory(result['output_dir'], download_zip_path)
+
+        task_prefix = f'tasks/{task_id}'
         return {
             'generated_at': result['generated_at'],
-            'report_json': os.path.basename(result['report_json_path']),
-            'report_html': os.path.basename(result['report_html_path']),
-            'download_zip': os.path.basename(download_zip),
-            'v1_doc': os.path.basename(result['v1_doc_path']),
-            'v2_doc': os.path.basename(result['v2_doc_path']),
+            'task_id': task_id,
+            'report_json': f'{task_prefix}/comparison_report.json',
+            'report_html': f'{task_prefix}/comparison_report.html',
+            'download_zip': f'tasks/{task_id}.zip',
+            'v1_doc': f'{task_prefix}/v1/documentation.json',
+            'v2_doc': f'{task_prefix}/v2/documentation.json',
+            'v1_plantuml': f'{task_prefix}/v1/class_diagram.puml',
+            'v2_plantuml': f'{task_prefix}/v2/class_diagram.puml',
             'summary': result['report']['summary'],
             'total_changes': result['report']['summary']['total_changes']
         }

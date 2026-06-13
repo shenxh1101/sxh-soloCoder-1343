@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ module.name }} - Module Documentation</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ base_path }}static/css/style.css">
 </head>
 <body>
 {% from '_macros.html' import render_header, render_sidebar, render_method %}
 
-{{ render_header(module.name, metadata) }}
+{{ render_header(module.name, metadata, base_path) }}
 
 <div class="container">
-    {{ render_sidebar(metadata, {}, [], [], []) }}
+    {{ render_sidebar(metadata, {}, [], [], [], base_path) }}
 
     <div class="main-content">
         <div class="breadcrumb">
-            <a href="../index.html">Home</a> &rsaquo;
+            <a href="{{ base_path }}index.html">Home</a> &rsaquo;
             <span>{{ module.name }}</span>
         </div>
 
@@ -64,7 +64,7 @@
                     <span class="badge {{ mod }}">{{ mod }}</span>
                     {% endfor %}
                     {% set safe_name = module.full_name.replace('/', '_').replace('\\', '_') + '_' + cls.name %}
-                    <a href="../classes/{{ safe_name }}.html">{{ cls.name }}</a>
+                    <a href="{{ base_path }}classes/{{ safe_name }}.html">{{ cls.name }}</a>
                 </h4>
                 {% if cls.description %}
                 <p>{{ cls.description }}</p>

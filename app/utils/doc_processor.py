@@ -20,12 +20,15 @@ class DocumentationProcessor:
         template_dir = os.path.join(os.path.dirname(__file__), '..', 'templates')
         self.jinja_env = Environment(loader=FileSystemLoader(template_dir))
 
-    def process_zip(self, zip_path, project_name=None):
+    def process_zip(self, zip_path, project_name=None, output_dir=None):
         if not project_name:
             project_name = os.path.splitext(os.path.basename(zip_path))[0]
 
         temp_dir = create_temp_dir(prefix='extract_')
-        output_dir = create_temp_dir(prefix='output_')
+        if output_dir is None:
+            output_dir = create_temp_dir(prefix='output_')
+        else:
+            os.makedirs(output_dir, exist_ok=True)
 
         try:
             extract_zip(zip_path, temp_dir)
@@ -56,7 +59,8 @@ class DocumentationProcessor:
 
         except Exception as e:
             shutil.rmtree(temp_dir, ignore_errors=True)
-            shutil.rmtree(output_dir, ignore_errors=True)
+            if output_dir is None:
+                shutil.rmtree(output_dir, ignore_errors=True)
             raise
 
     def _parse_source_files(self, source_dir):
@@ -77,14 +81,21 @@ class DocumentationProcessor:
 
         return parsed_files
 
-    def compare_versions(self, zip_path_v1, zip_path_v2, name_v1=None, name_v2=None):
-        result_v1 = self.process_zip(zip_path_v1, name_v1 or 'Version 1')
-        result_v2 = self.process_zip(zip_path_v2, name_v2 or 'Version 2')
+    def compare_versions(self, zip_path_v1, zip_path_v2, name_v1=None, name_v2=None, output_dir=None):
+        if output_dir is None:
+            output_dir = create_temp_dir(prefix='compare_')
+        os.makedirs(output_dir, exist_ok=True)
+
+        v1_dir = os.path.join(output_dir, 'v1')
+        v2_dir = os.path.join(output_dir, 'v2')
+        os.makedirs(v1_dir, exist_ok=True)
+        os.makedirs(v2_dir, exist_ok=True)
+
+        result_v1 = self.process_zip(zip_path_v1, name_v1 or 'Version 1', output_dir=v1_dir)
+        result_v2 = self.process_zip(zip_path_v2, name_v2 or 'Version 2', output_dir=v2_dir)
 
         report = compare_versions(result_v1['doc_structure'], result_v2['doc_structure'])
 
-        output_dir = create_temp_dir(prefix='compare_')
-        
         report_json_path = os.path.join(output_dir, 'comparison_report.json')
         with open(report_json_path, 'w', encoding='utf-8') as f:
             json.dump(report, f, ensure_ascii=False, indent=2)
@@ -103,6 +114,10 @@ class DocumentationProcessor:
             'report_html_path': report_html_path,
             'v1_doc_path': result_v1['json_path'],
             'v2_doc_path': result_v2['json_path'],
+            'v1_html_dir': result_v1['html_dir'],
+            'v2_html_dir': result_v2['html_dir'],
+            'v1_plantuml_path': result_v1['plantuml_path'],
+            'v2_plantuml_path': result_v2['plantuml_path'],
             'generated_at': datetime.now().isoformat()
         }
 
